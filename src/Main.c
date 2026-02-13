@@ -6,8 +6,8 @@
 #include "Player.h"
 #include "Renderer.h"
 
-#define WIDTH 1280
-#define HEIGHT 960
+#define WIDTH 2500
+#define HEIGHT 1400
 
 #define MAP_WIDTH 640
 #define MAP_HEIGHT 480

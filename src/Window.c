@@ -26,6 +26,8 @@ Window* window_create(int width, int height, char* name)
         }
         width = DM.w;
         height = DM.h;
+
+        printf("WIDTH %d HEIGHT %d\n", width, height);
     }
 
     window->width = width;
@@ -36,7 +38,7 @@ Window* window_create(int width, int height, char* name)
     window->running = true;
 
     if (fullscreen)
-        window->window = SDL_CreateWindow(name, window->x, window->y, window->width, window->height, SDL_WINDOW_FULLSCREEN);
+        window->window = SDL_CreateWindow(name, window->x, window->y, window->width, window->height, SDL_WINDOW_FULLSCREEN_DESKTOP);
     else
         window->window = SDL_CreateWindow(name, window->x, window->y, window->width, window->height, SDL_WINDOW_SHOWN);
 

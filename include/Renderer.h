@@ -5,8 +5,9 @@
 #include "RayCaster.h"
 #include "Player.h"
 
-#define HEIGHT_MULT 10
-#define COLOR_MULT 10
+#define HEIGHT_MULT 5.0f
+#define COLOR_MULT 2.0f
+#define MAX_SEE_DISTANCE 200
 
 // extern const Color4 COLOR_BACKGROUND = {105, 109, 112, 255};
 // extern const Color4 COLOR_WALL = {83, 139, 189, 255};
