@@ -1,0 +1,78 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-std=c99",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-g",
+      "-o",
+      "bin/main",
+      "src/Main.c"
+    ],
+    "directory": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)",
+    "file": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/src/Main.c",
+    "output": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-std=c99",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-g",
+      "-o",
+      "bin/main",
+      "src/Player.c"
+    ],
+    "directory": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)",
+    "file": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/src/Player.c",
+    "output": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-std=c99",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-g",
+      "-o",
+      "bin/main",
+      "src/RayCaster.c"
+    ],
+    "directory": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)",
+    "file": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/src/RayCaster.c",
+    "output": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/bin/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-std=c99",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-g",
+      "-o",
+      "bin/main",
+      "src/Window.c"
+    ],
+    "directory": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)",
+    "file": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/src/Window.c",
+    "output": "/home/matei/Desktop/prg/C/3D(2D-RayCaster)/bin/main"
+  }
+]
