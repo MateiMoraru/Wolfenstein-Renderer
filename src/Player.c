@@ -14,7 +14,7 @@ void player_set_position(char** map, Player* player, RayCaster* ray_caster, floa
 }
 void player_move(char** map, Player* player, RayCaster* ray_caster, float forward, float strafe)
 {
-    float dir_rad = DEG_TO_RAD(player->direction + 20);
+    float dir_rad = DEG_TO_RAD(player->direction + DIR_OFFSET); 
 
     float dx = cosf(dir_rad) * forward - sinf(dir_rad) * strafe;
     float dy = sinf(dir_rad) * forward + cosf(dir_rad) * strafe;

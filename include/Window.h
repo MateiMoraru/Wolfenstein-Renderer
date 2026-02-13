@@ -29,6 +29,16 @@ typedef struct Window
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
+    Uint32 last_time;
+    Uint32 current_time; 
+    float delta_time;
+
+    int FPS_counter;
+    int FPS;
+    float FPS_timer;
+
+    float target_FPS;
+    float frame_delay;
 } Window;
 
 
@@ -58,6 +68,10 @@ bool window_poll_event(Window* window);
 SDL_Event window_get_event(Window* window);
 int window_get_key(Window* window);
 
+void window_set_fps(Window* window, int fps);
+void window_delay_fps(Window* window);
+
 Color4 hex_to_int(int hex);
+int color_to_hex(const Color4* color);
 
 #endif

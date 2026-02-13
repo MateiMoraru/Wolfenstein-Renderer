@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
-const Color4 COLOR_BACKGROUND = {105, 109, 112, 255};
-const Color4 COLOR_WALL = {83, 139, 189, 255};
+const Color4 COLOR_BACKGROUND = {10, 10, 20, 255};
+const Color4 COLOR_WALL = {88, 41, 148, 255};
 
 Renderer* renderer_init(Player* player, RayCaster* ray_caster, Window* window)
 {
@@ -26,18 +26,30 @@ Column compute_column(int max_height, Ray* ray)
     int height;
 
     height = (int)((float)max_height / ray->len * HEIGHT_MULT);
+
+    if (height > max_height)
+    {
+        height = max_height;
+    }
+
     if (height < 2) 
         height = 2;
     float mult = (float)COLOR_MULT / (float)ray->len;
 
-    if (mult > 1.0f)
-        mult = 1.0f;
-    else if (mult < 0.3f)
-        mult = 0.3f;
-        
+    if (mult > .8f)
+    {
+        mult = .8f;
+
+    }
     color.r *= mult;
     color.g *= mult;
     color.b *= mult;
+
+    if (mult < MIN_DIST_MULT)
+    {
+        color = COLOR_BACKGROUND;
+    }
+    
 
     Column col = {color, height};
     return col;

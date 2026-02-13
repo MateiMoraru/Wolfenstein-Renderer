@@ -6,6 +6,7 @@
 #include "RayCaster.h"
 
 #define SENSITIVITY 0.30
+#define DIR_OFFSET 19.0f
 
 typedef struct
 {

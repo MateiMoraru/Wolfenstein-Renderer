@@ -1,31 +1,65 @@
 import random
 
 width, height = 640, 480
-
 map_grid = [['#' for _ in range(width)] for _ in range(height)]
 
-map_grid[18][50] = ' '
+start_x, start_y = 50, 18
+
+rooms = []
 
 def add_room(x, y, w, h):
     for i in range(y, min(y+h, height-1)):
         for j in range(x, min(x+w, width-1)):
             map_grid[i][j] = ' '
 
-num_rooms = 200
-for _ in range(num_rooms):
-    rw, rh = random.randint(10, 20), random.randint(10, 20)
-    rx, ry = random.randint(1, width-2-rw), random.randint(1, height-2-rh)
-    if not (rx <= 50 < rx+rw and ry <= 18 < ry+rh):
-        add_room(rx, ry, rw, rh)
+def room_overlaps(x, y, w, h):
+    for rx, ry, rw, rh in rooms:
+        if (x < rx + rw + 1 and x + w + 1 > rx and
+            y < ry + rh + 1 and y + h + 1 > ry):
+            return True
+    return False
 
-for _ in range(num_rooms * 2):
-    x1, y1 = random.randint(1, width-2), random.randint(1, height-2)
-    x2, y2 = random.randint(1, width-2), random.randint(1, height-2)
-    if map_grid[y1][x1] == ' ' and map_grid[y2][x2] == ' ':
-        for x in range(min(x1,x2), max(x1,x2)+1):
-            map_grid[y1][x] = ' '
-        for y in range(min(y1,y2), max(y1,y2)+1):
-            map_grid[y][x2] = ' '
+def add_corridor(x1, y1, x2, y2, thickness=3):
+    if x1 == x2 or y1 == y2:
+        for i in range(max(min(y1,y2)-thickness//2,0), min(max(y1,y2)+thickness//2+1, height)):
+            for j in range(max(min(x1,x2)-thickness//2,0), min(max(x1,x2)+thickness//2+1, width)):
+                map_grid[i][j] = ' '
+    else:
+        mid_x = x2
+        mid_y = y1
+        add_corridor(x1, y1, mid_x, mid_y, thickness)
+        add_corridor(mid_x, mid_y, x2, y2, thickness)
+
+start_room_w = random.randint(10, 30)
+start_room_h = random.randint(10, 30)
+
+start_room_x = max(1, start_x - random.randint(1, start_room_w-1))
+start_room_y = max(1, start_y - random.randint(1, start_room_h-1))
+
+add_room(start_room_x, start_room_y, start_room_w, start_room_h)
+rooms.append((start_room_x, start_room_y, start_room_w, start_room_h))
+
+num_rooms = 100
+for _ in range(num_rooms):
+    rw = random.randint(10, 30)
+    rh = random.randint(10, 30)
+    rx = random.randint(1, width - rw - 1)
+    ry = random.randint(1, height - rh - 1)
+    
+    if room_overlaps(rx, ry, rw, rh):
+        continue
+
+    add_room(rx, ry, rw, rh)
+    rooms.append((rx, ry, rw, rh))
+
+for i in range(1, len(rooms)):
+    x1 = rooms[i-1][0] + rooms[i-1][2] // 2
+    y1 = rooms[i-1][1] + rooms[i-1][3] // 2
+    x2 = rooms[i][0] + rooms[i][2] // 2
+    y2 = rooms[i][1] + rooms[i][3] // 2
+    add_corridor(x1, y1, x2, y2, thickness=3)
+
+map_grid[start_y][start_x] = 'p'
 
 file_name = "assets/data/maze.txt"
 with open(file_name, "w") as f:

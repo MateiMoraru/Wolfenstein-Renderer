@@ -5,6 +5,7 @@
 #include "RayCaster.h"
 #include "Player.h"
 #include "Renderer.h"
+#include "Text.h"
 
 #define WIDTH 2500
 #define HEIGHT 1400
@@ -89,7 +90,7 @@ void draw_map(char** map, Window* window, int scale)
             window_draw_rect(window, &rect);
         }
     }
-    window_set_draw_color(window, 0x696d70FF);
+    window_set_draw_color(window, color_to_hex(&COLOR_BACKGROUND));
 }
 
 void handle_mouse(Mouse* mouse)
@@ -110,6 +111,8 @@ void handle_keys(char** map, Player* player, RayCaster* ray_caster, float delta_
     float move = player->speed * delta_time;
     float forward = 0;
     float strafe = 0;
+
+    if (keys[SDL_SCANCODE_LSHIFT]) move *= 2;
 
     if (keys[SDL_SCANCODE_W]) forward += move;
     if (keys[SDL_SCANCODE_S]) forward -= move;
@@ -192,11 +195,6 @@ int main()
 {   
     Window* window = window_create(-1, -1, "Domm");
 
-    SDL_SetRelativeMouseMode(SDL_FALSE);
-    SDL_CaptureMouse(SDL_FALSE);
-    SDL_SetWindowGrab(window->window, SDL_FALSE);
-    SDL_ShowCursor(SDL_TRUE);   
-
     const char* map_load_file = "assets/data/map.txt";
 
     char** map;
@@ -206,18 +204,18 @@ int main()
     map_load(map, map_load_file);
 
     Player player = {
-        .x = 50, 
-        .y = 14,
+        .x = 63, 
+        .y = 18,
         .speed = 8, 
-        .direction = 240, 
-        .fov = 60
+        .direction = 90, 
+        .fov = 40
     };
 
     RayCaster ray_caster;
     
     ray_caster_init(player.x, player.y, player.direction, player.fov, &ray_caster);
 
-    player_set_position(map, &player, &ray_caster, 50, 18);
+    player_set_position(map, &player, &ray_caster, 69, 20);
     
     ray_caster_set_position(&ray_caster, player.x, player.y);
 
@@ -226,19 +224,22 @@ int main()
     mouse.x = WIDTH / 2;
     mouse.y = HEIGHT / 2;
 
-    // SDL_WarpMouseInWindow(window->window, mouse.x, mouse.y);
+    Font font = {
+        .width = 8,
+        .height = 8,
+        .data = (const uint8_t (*)[8]) font8x8_basic
+    };
+
 
     Renderer* renderer = renderer_init(&player, &ray_caster, window);
 
-    Uint32 last_time = SDL_GetTicks();
-    Uint32 current_time; 
-    float delta_time = 0;
+    char fps_buffer[64];
+
+    window_set_fps(window, 30);
 
     while(window->running)
     {
-        current_time = SDL_GetTicks();
-        delta_time = (current_time - last_time) / 1000.0f;
-        last_time = current_time;
+        
         while(window_poll_event(window))
         {
 
@@ -258,7 +259,7 @@ int main()
 
         }
 
-        handle_keys(map, &player, &ray_caster, delta_time);
+        handle_keys(map, &player, &ray_caster, window->delta_time);
         ray_caster_set_position(&ray_caster, player.x, player.y);
 
         handle_mouse(&mouse);
@@ -277,16 +278,20 @@ int main()
             renderer->ray_caster->rays[i].len = ray_hits_wall(map, &renderer->ray_caster->rays[i]);
         }
 
-        window_set_draw_color(window, 0x696d70FF);
+        window_set_draw_color(window, color_to_hex(&COLOR_BACKGROUND));
         window_clear(window);
 
         renderer_draw(renderer, window);
 
         //draw_map(map, window, SCALE);
 
-        //draw_rays(window, &ray_caster.rays, map);        
+        //draw_rays(window, &ray_caster.rays, map);    
+        sprintf(fps_buffer, "FPS: %d", window->FPS); 
+        text_draw(window->renderer, &font, 10, 10, fps_buffer, 2, (SDL_Color){255, 255, 255, 255});
 
         window_show(window);
+
+        window_delay_fps(window);
     }
 
     for (int y = 0; y < MAP_HEIGHT; y++)

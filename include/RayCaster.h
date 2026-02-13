@@ -3,7 +3,7 @@
 
 #include "Window.h"
 
-#define NUMBER_RAYS 200
+#define NUMBER_RAYS 400
 #define RAY_LEN 1200
 
 #define SCALE 0.2

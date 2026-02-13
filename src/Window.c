@@ -22,12 +22,10 @@ Window* window_create(int width, int height, char* name)
         SDL_DisplayMode DM;
         if (SDL_GetCurrentDisplayMode(0, &DM) != 0) {
             printf("SDL_GetCurrentDisplayMode failed: %s\n", SDL_GetError());
-            return 1;
+            return NULL;
         }
         width = DM.w;
         height = DM.h;
-
-        printf("WIDTH %d HEIGHT %d\n", width, height);
     }
 
     window->width = width;
@@ -36,6 +34,13 @@ Window* window_create(int width, int height, char* name)
     window->y = SDL_WINDOWPOS_CENTERED;
     window->name = name;
     window->running = true;
+
+    window->delta_time = 0;
+    window->last_time = SDL_GetTicks();
+
+    window->FPS = 0;
+    window->FPS_counter = 0;
+    window->FPS_timer = 0.0f;
 
     if (fullscreen)
         window->window = SDL_CreateWindow(name, window->x, window->y, window->width, window->height, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -77,6 +82,19 @@ void window_quit(Window* window)
 
 void window_clear(Window* window)
 {
+    window->current_time = SDL_GetTicks();
+    window->delta_time = (window->current_time - window->last_time) / 1000.0f;
+    window->last_time = window->current_time;
+    window->FPS_counter++;
+    window->FPS_timer += window->delta_time;
+
+    if (window->FPS_timer > 1.0f)
+    {
+        window->FPS = window->FPS_counter;
+        window->FPS_counter = 0;
+        window->FPS_timer = 0;
+    }
+
     SDL_RenderClear(window->renderer);
 }
 
@@ -116,6 +134,26 @@ int window_get_key(Window* window)
     return SDLK_UNKNOWN;
 }
 
+void window_set_fps(Window* window, int fps)
+{
+    window->target_FPS = fps;
+
+    if (fps > 0)
+        window->frame_delay = 1000.0f / fps;
+    else
+        window->frame_delay = 0;
+}
+
+void window_delay_fps(Window* window)
+{
+    if (window->target_FPS <= 0) return;
+
+    Uint32 frame_time = SDL_GetTicks() - window->last_time;
+    if (frame_time < window->frame_delay)
+    {
+        SDL_Delay(window->frame_delay - frame_time);
+    }
+}
 Color4 hex_to_int(int hex)
 {
     Color4 color;
@@ -125,4 +163,9 @@ Color4 hex_to_int(int hex)
     color.a = (hex >> 0) & 0xFF;
 
     return color;
+}
+
+int color_to_hex(const Color4* color)
+{
+    return ((color->r << 24) | (color->g << 16) | (color->b << 8) | color->a);
 }
